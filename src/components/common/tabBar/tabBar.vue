@@ -1,6 +1,8 @@
 <template>
+
+
   <div :style="backgroundStyle" class="tabbar" v-if="list.length !== 0">
-    <tab-bar-item v-for="(item,index) in list" :obj="item" @click.native="tabBarItemFn(index,item)" :is-active="currentIndex === index" />
+    <tab-bar-item v-for="item in list" :key="item.title" :obj="item" @click.native="tabBarItemFn(item)" />
   </div>
 </template>
 
@@ -22,23 +24,17 @@ export default {
       }
     }
   },
-  data(){
-    return {
-      currentIndex:0,
-    }
-  },
   computed:{
     backgroundStyle(){
       // 用户可以决定背景色
       return Object.keys(this.bacStyle).length ? this.bacStyle : {background:"#f6f6f6"}
-    }
+    },
   },
   components:{
     tabBarItem
   },
   methods:{
-    tabBarItemFn(index,item){
-      this.currentIndex = index;
+    tabBarItemFn(item){
       this.$router.replace("/"+item.name);
     }
   }

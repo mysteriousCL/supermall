@@ -2,7 +2,7 @@
 
     <swiper ref="mySwiper" :options="swiperOptions" v-if="imageList.length !== 0">
       <swiper-slide v-for="item in imageList" :key="item.acm">
-        <a :href="item.link"><img :src="item.image" alt=""></a>
+        <a :href="item.link"><img :src="item.image" alt="" @load="imageLoad"></a>
       </swiper-slide>
 
       <div class="swiper-pagination" slot="pagination"></div>
@@ -33,6 +33,7 @@ export default {
   },
   data() {
     return {
+      count:0,
       swiperOptions: {
         // // Some Swiper option/callback...
         pagination: {
@@ -46,12 +47,6 @@ export default {
           stopOnLastSlide:false,//如果设置为true，当切换到最后一个slide时停止自动切换。（loop模式下无效）。
           disableOnInteraction:false//用户操作swiper之后，是否禁止autoplay。默认为true：停止。
         },
-        // speed:800,//滑动速度
-        //
-        // direction:"horizontal", //滑动方向
-        // grabCursor:true,//小手掌抓取滑动
-        // initialSlide:0,//设定初始化时slide的索引
-
       }
     }
   },
@@ -61,8 +56,13 @@ export default {
     }
   },
   mounted() {
-    console.log('Current Swiper instance object', this.swiper)
     this.swiper && this.swiper.slideTo(3, 1000, false)
+  },
+  methods:{
+    imageLoad(){
+      this.count++;
+      this.count === this.imageList.length && this.$emit("imageCompleted")
+    }
   },
   components:{
     Swiper,SwiperSlide

@@ -10,8 +10,11 @@ export default {
   name: "Detail",
   data(){
     return {
-
+      iid:""
     }
+  },
+  created() {
+    this.iid = this.$route.params.iid
   },
   components:{
     DetailTopBar

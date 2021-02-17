@@ -18,10 +18,6 @@ export default {
         return {}
       }
     },
-    isActive: {
-      type:Boolean,
-      default:false
-    },
     activeStyle:{
       type:Object,
       default() {
@@ -33,6 +29,9 @@ export default {
     textStyle(){
       // 根据是否活跃，是否传 activeStyle值，来决定文本活跃时style的值
       return this.isActive ? (Object.keys(this.activeStyle).length !==0 ? this.activeStyle : {color:"#ff5777"}) : {}
+    },
+    isActive(){
+      return this.$route.path.indexOf("/"+this.obj.name) !== -1 ? true : false;
     }
   }
 }

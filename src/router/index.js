@@ -18,7 +18,7 @@ const routes = [
   {path: '/category', name: 'About', component: Category},
   {path: '/cart', name: 'Cart', component: Cart},
   {path: '/profile', name: 'Profile', component: Profile},
-  {path: '/detail', name: 'Detail', component: Detail},
+  {path: '/detail/:iid', name: 'Detail', component: Detail},
 
 
 ]

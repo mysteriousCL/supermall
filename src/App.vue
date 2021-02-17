@@ -1,6 +1,8 @@
 <template>
  <div>
-   <router-view />
+   <keep-alive>
+     <router-view />
+   </keep-alive>
    <tab-bar :list="list" v-show="isShow" />
  </div>
 </template>
