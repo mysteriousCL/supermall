@@ -1,7 +1,7 @@
 <template>
   <div id="home">
     <top-banner title="购物街" class="nav-bar" />
-    <better-scrool class="wrapper" ref="scrool" @scroll="scrolling" @pullingUp="pullUpMore">
+    <better-scrool class="wrapper" ref="scroll" @scroll="scrolling" @pullingUp="pullUpMore">
       <home-swiper :image-list="banner" @imageCompleted="imageLoadfn"/>
       <home-recommend :list="recommendList" />
       <feature-view />
@@ -9,7 +9,7 @@
       <goods-list :goods-list="goodsList"/>
     </better-scrool>
     <bar-control :titles="tabList" @tabClick="receiveType2" ref="tabControl2" class="tab_control2" v-show="controlShow"/>
-    <move-top @click.native="moveTop" v-show="showTop"/>
+    <move-top @click.native="moveTop" v-show="is_back_show"/>
   </div>
 </template>
 
@@ -19,7 +19,6 @@ import topBanner from "components/content/topbanner/topBanner";
 import BarControl from "components/content/barControl/BarControl";
 import GoodsList from "components/content/goods/GoodsList";
 import BetterScrool from "components/common/scroll/BetterScrool";
-import MoveTop from "components/content/moveTop/MoveTop";
 
 import HomeSwiper from "./components/HomeSwiper";
 import HomeRecommend from "./components/HomeRecommend";
@@ -28,6 +27,7 @@ import FeatureView from "./components/FeatureView";
 import {homeRequestMultidata,homeRequestData} from "network/homeRequest";
 
 import {debounce} from "common/utils";
+import {backTop} from "common/mixin";
 
 export default {
   name: "Home",
@@ -42,7 +42,7 @@ export default {
         "sell":{page:0,list:[]}
       },
       type:"pop",//默认pop
-      showTop:false,
+
       controlHeight:0,
       controlShow:false,
     }
@@ -57,9 +57,9 @@ export default {
 
   },
   mounted() {
-    const refresh = debounce(this.$refs.scrool.refresh,300)
+    const refresh = debounce(this.$refs.scroll.refresh,300)
     // refresh 不会销毁，闭包引用
-    this.$bus.$on("image_load",()=>{
+    this.$bus.$on("homeImageLoad",()=>{
       refresh()
     })
   },
@@ -69,6 +69,7 @@ export default {
       return this.goods[this.type].list
     },
   },
+  mixins:[backTop],
   methods:{
     //网络请求相关方法
     getHomeRequestMultidata(){
@@ -86,7 +87,7 @@ export default {
         goods.page = page;
         goods.list.push(...res.data.list)
 
-        this.$refs.scrool.bs && this.$refs.scrool.bs.finishPullUp()
+        this.$refs.scroll.bs && this.$refs.scroll.bs.finishPullUp()
       })
     },
     // 获取tabControl内部的当前类型
@@ -98,14 +99,12 @@ export default {
       this.type = type;
       this.$refs.tabControl1.currentIndex = index
     },
-    //返回顶部
-    moveTop(){
-      this.$refs.scrool.bs.scrollTo(0,0,300)
-    },
+
     //滚动中
     scrolling(position){
-      //是否展示返回顶部按钮
-      this.showTop = position.y < -1000
+      //是否展示返回顶部按钮，该方法是混入的方法
+      this.backShow(position.y)
+
       //吸顶
       let atachPositon = -position.y + 44
       if(atachPositon >= this.controlHeight && !this.controlShow){
@@ -122,10 +121,11 @@ export default {
     imageLoadfn(){
       // 获取tabControl的高度
       this.controlHeight = this.$refs.tabControl1.$el.offsetTop
+      this.$refs.scroll && this.$refs.scroll.refresh()
     }
   },
   components:{
-    topBanner,HomeSwiper,HomeRecommend,FeatureView,BarControl,GoodsList,BetterScrool,MoveTop
+    topBanner,HomeSwiper,HomeRecommend,FeatureView,BarControl,GoodsList,BetterScrool
   }
 }
 </script>

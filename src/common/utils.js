@@ -61,3 +61,31 @@ export function throttle(func, wait, options) {
 
   return throttled;
 }
+
+
+export function dataFormat(data,fmt){
+  // 这里是24小时制，可以再加一个12小时制
+  if(/Y/i.test(fmt)){
+    fmt =fmt.replace(/Y+/i,value=>value.length<5 && (data.getFullYear()+"").slice(4-value.length))
+  }
+
+  let obj = {
+    'M+':data.getMonth()+1,
+    'D+':data.getDate(),
+    'h+':data.getHours(),
+    'm+':data.getMinutes(),
+    's+':data.getSeconds(),
+    'z+':data.getMilliseconds()
+  };
+
+  for(let key in obj){
+    let rxp =(typeof key !== 'undefined') && new RegExp(key);
+    if(fmt.search(rxp) !== -1){
+      fmt = fmt.replace(new RegExp(key),function(valuey){
+        let str = "00"+obj[key];//这里的00字符串也是000,0000,00000等。反正都是从后开始取。这里起到的作用相当提前填充
+        return str.slice(str.length-valuey.length)//从填充后的字符串，进行截取
+      })
+    }
+  }
+  return fmt;
+}

@@ -1,6 +1,6 @@
 <template>
  <div>
-   <keep-alive>
+   <keep-alive exclude="Detail">
      <router-view />
    </keep-alive>
    <tab-bar :list="list" v-show="isShow" />

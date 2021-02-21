@@ -44,7 +44,6 @@ export default {
   },
   methods:{
     refresh(){
-      console.log("refresh");
       this.bs && this.bs.refresh()
     },
   }

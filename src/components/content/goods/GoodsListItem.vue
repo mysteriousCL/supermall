@@ -1,6 +1,6 @@
 <template>
   <div v-if="Object.keys(goodsItem).length !== 0" class="goods_item" @click="goDetail">
-    <img :src="goodsItem.show.img" alt="" @load="imageComplated">
+    <img v-lazy="showImage" alt="" @load="imageComplated">
     <div class="goods_info">
       <p>{{goodsItem.title}}</p>
       <span class="price">{{goodsItem.price}}</span>
@@ -21,9 +21,21 @@ export default {
       }
     }
   },
+  computed:{
+    showImage(){
+      return  this.goodsItem.image || this.goodsItem.show.img
+    }
+  },
   methods:{
     imageComplated(){
-      this.$bus.$emit("image_load")
+      // 容易忽略的问题
+      // 路由判断，若在详情页和首页都使用，当在详情页时，就只发给详情页。若在首页使用，就只发给首页
+      if(this.$route.path.indexOf("/home") !== -1){
+        this.$bus.$emit("homeImageLoad")
+      }else if(this.$route.path.indexOf("/detail") !== -1 ){
+        this.$bus.$emit("detailImageLoad")
+      }
+
     },
     goDetail(){
       this.$router.push("/detail/"+this.goodsItem.iid)

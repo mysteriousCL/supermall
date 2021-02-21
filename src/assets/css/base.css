@@ -18,6 +18,9 @@
     padding: 0;
     box-sizing: border-box;
 }
+html{
+  touch-action: none;/*解决fastclick在Chrome新版中出现的报错*/
+}
 
 body {
     font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;

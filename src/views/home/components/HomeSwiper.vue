@@ -35,7 +35,7 @@ export default {
     return {
       count:0,
       swiperOptions: {
-        // // Some Swiper option/callback...
+        // Some Swiper option/callback...
         pagination: {
           el: '.swiper-pagination',// 分页器
           clickable:true,//为true时，点击分页器的指示点分页器会控制Swiper切换
